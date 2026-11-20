@@ -223,8 +223,8 @@ async def send_log(guild, key, enabled_key, message=None, *, embed_obj=None, fil
         await ch.send(content=message, embed=embed_obj, files=files or [])
     except Exception as ex:
         log.warning("log send failed (%s): %s", key, ex)
-        async def log_admin(guild, admin, action):
-    with db_connect() as c:
+    async def log_admin(guild, admin, action):
+        with db_connect() as c:
         c.execute(
             "INSERT INTO admin_logs(admin_id,action,created_at) VALUES(?,?,?)",
             (admin.id, action, now_iso())
