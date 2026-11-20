@@ -896,7 +896,7 @@ async def admin_section(interaction, section):
 async def _admin_section_locked(interaction, section):
     guild = interaction.guild
     admin = interaction.user
-        if section == "channels":
+    if section == "channels":
         options = [
             ("streak_channel_id", "قناة الستريك"),
             ("log_photo_channel_id", "سجل الصور"),
