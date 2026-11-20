@@ -1213,7 +1213,7 @@ async def _admin_section_locked(interaction, section):
             set_config("ranks", ranks)
             await log_admin(guild, admin, f"Edited ranks ({days})")
             await interaction.followup.send("تم حفظ الرتبة.", ephemeral=True)
-                elif section == "features":
+            elif section == "features":
         toggles = [
             ("DM الصور", "dm_photo_enabled"),
             ("DM البداية", "dm_start_enabled"),
