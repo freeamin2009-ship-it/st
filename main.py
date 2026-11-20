@@ -95,10 +95,41 @@ DEFAULT_CONFIG = {
 # =========================
 
 def db():
-    conn = sqlite3.connect(DB_PATH, timeout=30)
-    conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA journal_mode=WAL")
-    return conn
+    global DB_PATH
+
+    paths = [
+        DB_PATH,
+        os.path.join(os.getcwd(), "streaks.sqlite3"),
+        "/tmp/streaks.sqlite3",
+    ]
+
+    last_error = None
+
+    for path in dict.fromkeys(paths):
+        try:
+            folder = os.path.dirname(path)
+
+            if folder:
+                os.makedirs(folder, exist_ok=True)
+
+            conn = sqlite3.connect(path, timeout=30)
+            conn.row_factory = sqlite3.Row
+            conn.execute("PRAGMA journal_mode=WAL")
+
+            DB_PATH = path
+            return conn
+
+        except (sqlite3.OperationalError, OSError) as error:
+            last_error = error
+            logger.warning(
+                "Database path unavailable: %s | %s",
+                path,
+                error
+            )
+
+    raise RuntimeError(
+        f"Cannot open database on any available path: {last_error}"
+    )
 
 
 def init_db():
