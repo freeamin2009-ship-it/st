@@ -448,23 +448,36 @@ async def _record_photo_locked(message: discord.Message, image_attachments):
                         await ch.send(embed=e)
                 except Exception as ex:
                     log.warning("Photo log failed: %s", ex)
-                    async def check_ranks(guild, member, days):
-    ranks = sorted(get_config("ranks") or [], key=lambda x: int(x.get("days", 0)))
+    async def check_ranks(guild, member, days):
+        ranks = sorted(
+            get_config("ranks") or [],
+            key=lambda x: int(x.get("days", 0))
+                )
+
     for rank in ranks:
         milestone = int(rank.get("days", 0))
         if milestone <= 0 or days < milestone:
             continue
 
-        # Recheck rank roles so removed roles can be reassigned later.
         role_id = int(rank.get("role_id") or 0)
         role = guild.get_role(role_id) if role_id else None
+
         if role and role not in member.roles:
             try:
-                await member.add_roles(role, reason=f"ST streak milestone {milestone}")
+                await member.add_roles(
+                    role,
+                    reason=f"ST streak milestone {milestone}"
+                )
             except discord.Forbidden:
-                log.warning("No role permission for milestone role %s", role_id)
+                log.warning("No permission for milestone role %s", role_id)
             except discord.HTTPException:
                 log.exception("Failed assigning milestone role %s", role_id)
+
+        with db_connect() as c:
+            exists = c.execute(
+                "SELECT 1 FROM milestone_awards WHERE user_id=? AND days=?",
+                (member.id, milestone)
+            ).fetchone()
 
         with db_connect() as c:
             exists = c.execute(
