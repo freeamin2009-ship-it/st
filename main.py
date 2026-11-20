@@ -1214,22 +1214,22 @@ async def _admin_section_locked(interaction, section):
             await log_admin(guild, admin, f"Edited ranks ({days})")
             await interaction.followup.send("تم حفظ الرتبة.", ephemeral=True)
         elif section == "features":
-        toggles = [
-            ("DM الصور", "dm_photo_enabled"),
-            ("DM البداية", "dm_start_enabled"),
-            ("DM الرتب", "dm_rank_enabled"),
-            ("الرياكشن", "reaction_enabled"),
-            ("الفاصل", "divider_enabled"),
-            ("تخصيص الأعضاء", "customization_enabled"),
-            ("سجل الصور", "log_photos_enabled"),
-            ("سجل الحذف", "log_deletes_enabled"),
-            ("سجل الرياكشن", "log_reactions_enabled"),
-            ("سجل الخاص", "log_dms_enabled"),
-            ("سجل الدروع", "log_shields_enabled"),
-            ("سجل الإدارة", "log_admin_enabled"),
-            ("إزالة رتب الستريك عند الانقطاع", "remove_rank_roles_on_break"),
-            ("الاحتفاظ بالرتب القديمة", "keep_old_rank_roles")
-        ]
+            toggles = [
+                ("DM الصور", "dm_photo_enabled"),
+                ("DM البداية", "dm_start_enabled"),
+                ("DM الرتب", "dm_rank_enabled"),
+                ("الرياكشن", "reaction_enabled"),
+                ("الفاصل", "divider_enabled"),
+                ("تخصيص الأعضاء", "customization_enabled"),
+                ("سجل الصور", "log_photos_enabled"),
+                ("سجل الحذف", "log_deletes_enabled"),
+                ("سجل الرياكشن", "log_reactions_enabled"),
+                ("سجل الخاص", "log_dms_enabled"),
+                ("سجل الدروع", "log_shields_enabled"),
+                ("سجل الإدارة", "log_admin_enabled"),
+                ("إزالة رتب الستريك عند الانقطاع", "remove_rank_roles_on_break"), 
+                ("الاحتفاظ بالرتب القديمة", "keep_old_rank_roles")
+            ]
 
         await interaction.followup.send(
             "أرسل اسم النظام لتبديل حالته:\n"
