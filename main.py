@@ -225,9 +225,9 @@ async def send_log(guild, key, enabled_key, message=None, *, embed_obj=None, fil
         log.warning("log send failed (%s): %s", key, ex)
     async def log_admin(guild, admin, action):
         with db_connect() as c:
-        c.execute(
-            "INSERT INTO admin_logs(admin_id,action,created_at) VALUES(?,?,?)",
-            (admin.id, action, now_iso())
+            c.execute(
+                "INSERT INTO admin_logs(admin_id,action,created_at) VALUES(?,?,?)",
+                (admin.id, action, now_iso())
         )
 
     if get_config("log_admin_enabled"):
