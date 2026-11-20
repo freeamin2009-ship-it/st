@@ -55,7 +55,7 @@ def add_photos(uid,n):
 intents=discord.Intents.default(); intents.message_content=True; intents.members=True
 bot=commands.Bot(command_prefix='-',intents=intents)
 
-REACTION_DEFAULT='🔥,❤️,💯'
+REACTION_DEFAULT='ð¥,â¤ï¸,ð¯'
 def reactions(): return [x.strip() for x in cfg('reactions',REACTION_DEFAULT).split(',') if x.strip()]
 def is_image(att): return (att.content_type or '').startswith('image/') or att.filename.lower().endswith(('.jpg','.jpeg','.png','.gif','.webp','.bmp'))
 def admin():
@@ -70,110 +70,110 @@ async def on_ready():
  print('Bot online:',bot.user)
  reminder.start() if not reminder.is_running() else None
 
-@bot.command(name='لوحة')
+@bot.command(name='ÙÙØ­Ø©')
 @commands.has_guild_permissions(manage_guild=True)
 async def panel(ctx):
- await ctx.send('**لوحة تحكم الستريك**\nاختر الزر لتعديل الإعدادات. كل الأزرار هنا للأدمن فقط.',view=AdminPanel())
+ await ctx.send('**ÙÙØ­Ø© ØªØ­ÙÙ Ø§ÙØ³ØªØ±ÙÙ**\nØ§Ø®ØªØ± Ø§ÙØ²Ø± ÙØªØ¹Ø¯ÙÙ Ø§ÙØ¥Ø¹Ø¯Ø§Ø¯Ø§Øª. ÙÙ Ø§ÙØ£Ø²Ø±Ø§Ø± ÙÙØ§ ÙÙØ£Ø¯ÙÙ ÙÙØ·.',view=AdminPanel())
 
 class AdminPanel(discord.ui.View):
  def __init__(self): super().__init__(timeout=600)
- @discord.ui.button(label='تحديد قناة الستريك',style=discord.ButtonStyle.primary)
+ @discord.ui.button(label='ØªØ­Ø¯ÙØ¯ ÙÙØ§Ø© Ø§ÙØ³ØªØ±ÙÙ',style=discord.ButtonStyle.primary)
  async def channel(self,interaction,button): await interaction.response.send_modal(ChannelModal())
- @discord.ui.button(label='الإيموجيات',style=discord.ButtonStyle.primary)
+ @discord.ui.button(label='Ø§ÙØ¥ÙÙÙØ¬ÙØ§Øª',style=discord.ButtonStyle.primary)
  async def emoji(self,interaction,button): await interaction.response.send_modal(EmojiModal())
- @discord.ui.button(label='رسائل الخاص',style=discord.ButtonStyle.primary)
+ @discord.ui.button(label='Ø±Ø³Ø§Ø¦Ù Ø§ÙØ®Ø§Øµ',style=discord.ButtonStyle.primary)
  async def messages(self,interaction,button): await interaction.response.send_modal(MessagesModal())
- @discord.ui.button(label='صورة الفاصل',style=discord.ButtonStyle.primary)
+ @discord.ui.button(label='ØµÙØ±Ø© Ø§ÙÙØ§ØµÙ',style=discord.ButtonStyle.primary)
  async def divider(self,interaction,button): await interaction.response.send_modal(DividerModal())
- @discord.ui.button(label='التذكير',style=discord.ButtonStyle.primary)
+ @discord.ui.button(label='Ø§ÙØªØ°ÙÙØ±',style=discord.ButtonStyle.primary)
  async def reminder_settings(self,interaction,button): await interaction.response.send_modal(ReminderModal())
- @discord.ui.button(label='تفعيل/تعطيل الميزات',style=discord.ButtonStyle.secondary)
+ @discord.ui.button(label='ØªÙØ¹ÙÙ/ØªØ¹Ø·ÙÙ Ø§ÙÙÙØ²Ø§Øª',style=discord.ButtonStyle.secondary)
  async def toggles(self,interaction,button): await interaction.response.send_modal(ToggleModal())
- @discord.ui.button(label='إعلان للأعضاء',style=discord.ButtonStyle.danger)
+ @discord.ui.button(label='Ø¥Ø¹ÙØ§Ù ÙÙØ£Ø¹Ø¶Ø§Ø¡',style=discord.ButtonStyle.danger)
  async def broadcast(self,interaction,button): await interaction.response.send_modal(BroadcastModal())
- @discord.ui.button(label='اختبار البوت',style=discord.ButtonStyle.success)
- async def test(self,interaction,button): await interaction.response.send_message(f'البوت يعمل ✅ {bot.user}',ephemeral=True)
+ @discord.ui.button(label='Ø§Ø®ØªØ¨Ø§Ø± Ø§ÙØ¨ÙØª',style=discord.ButtonStyle.success)
+ async def test(self,interaction,button): await interaction.response.send_message(f'Ø§ÙØ¨ÙØª ÙØ¹ÙÙ â {bot.user}',ephemeral=True)
  async def interaction_check(self,interaction):
   if not interaction.user.guild_permissions.manage_guild:
-   await interaction.response.send_message('هذه اللوحة للأدمن فقط.',ephemeral=True); return False
+   await interaction.response.send_message('ÙØ°Ù Ø§ÙÙÙØ­Ø© ÙÙØ£Ø¯ÙÙ ÙÙØ·.',ephemeral=True); return False
   return True
 
-class ChannelModal(discord.ui.Modal,title='تحديد قناة الستريك'):
- channel_id=discord.ui.TextInput(label='ID قناة الستريك',placeholder='حط رقم القناة فقط',required=True,max_length=25)
+class ChannelModal(discord.ui.Modal,title='ØªØ­Ø¯ÙØ¯ ÙÙØ§Ø© Ø§ÙØ³ØªØ±ÙÙ'):
+ channel_id=discord.ui.TextInput(label='ID ÙÙØ§Ø© Ø§ÙØ³ØªØ±ÙÙ',placeholder='Ø­Ø· Ø±ÙÙ Ø§ÙÙÙØ§Ø© ÙÙØ·',required=True,max_length=25)
  async def on_submit(self,interaction):
-  setcfg('channel_id',self.channel_id.value.strip()); await interaction.response.send_message('تم حفظ قناة الستريك ✅',ephemeral=True)
-class EmojiModal(discord.ui.Modal,title='تعديل الإيموجيات'):
- values=discord.ui.TextInput(label='الإيموجيات مفصولة بفاصلة',placeholder='🔥, ❤️, 💯 أو إيموجي السيرفر',required=True,max_length=300)
+  setcfg('channel_id',self.channel_id.value.strip()); await interaction.response.send_message('ØªÙ Ø­ÙØ¸ ÙÙØ§Ø© Ø§ÙØ³ØªØ±ÙÙ â',ephemeral=True)
+class EmojiModal(discord.ui.Modal,title='ØªØ¹Ø¯ÙÙ Ø§ÙØ¥ÙÙÙØ¬ÙØ§Øª'):
+ values=discord.ui.TextInput(label='Ø§ÙØ¥ÙÙÙØ¬ÙØ§Øª ÙÙØµÙÙØ© Ø¨ÙØ§ØµÙØ©',placeholder='ð¥, â¤ï¸, ð¯ Ø£Ù Ø¥ÙÙÙØ¬Ù Ø§ÙØ³ÙØ±ÙØ±',required=True,max_length=300)
  async def on_submit(self,interaction):
-  setcfg('reactions',self.values.value); await interaction.response.send_message('تم حفظ الإيموجيات ✅',ephemeral=True)
-class MessagesModal(discord.ui.Modal,title='تعديل رسائل الخاص'):
- start=discord.ui.TextInput(label='رسالة بداية الستريك',default=cfg('dm_start','بديت ستريك يا وحش استمر 🔥'),max_length=500)
- photo=discord.ui.TextInput(label='رسالة بعد كل صورة',default=cfg('dm_photo','تم تسجيل صورتك! ستريكك الحالي: {streak} يوم 🔥'),max_length=500)
- reminder_text=discord.ui.TextInput(label='رسالة التذكير',default=cfg('dm_reminder','⏰ لا تنسى الستريك اليوم! باقي وقت على نهاية اليوم 🔥'),max_length=500)
+  setcfg('reactions',self.values.value); await interaction.response.send_message('ØªÙ Ø­ÙØ¸ Ø§ÙØ¥ÙÙÙØ¬ÙØ§Øª â',ephemeral=True)
+class MessagesModal(discord.ui.Modal,title='ØªØ¹Ø¯ÙÙ Ø±Ø³Ø§Ø¦Ù Ø§ÙØ®Ø§Øµ'):
+ start=discord.ui.TextInput(label='Ø±Ø³Ø§ÙØ© Ø¨Ø¯Ø§ÙØ© Ø§ÙØ³ØªØ±ÙÙ',default=cfg('dm_start','Ø¨Ø¯ÙØª Ø³ØªØ±ÙÙ ÙØ§ ÙØ­Ø´ Ø§Ø³ØªÙØ± ð¥'),max_length=500)
+ photo=discord.ui.TextInput(label='Ø±Ø³Ø§ÙØ© Ø¨Ø¹Ø¯ ÙÙ ØµÙØ±Ø©',default=cfg('dm_photo','ØªÙ ØªØ³Ø¬ÙÙ ØµÙØ±ØªÙ! Ø³ØªØ±ÙÙÙ Ø§ÙØ­Ø§ÙÙ: {streak} ÙÙÙ ð¥'),max_length=500)
+ reminder_text=discord.ui.TextInput(label='Ø±Ø³Ø§ÙØ© Ø§ÙØªØ°ÙÙØ±',default=cfg('dm_reminder','â° ÙØ§ ØªÙØ³Ù Ø§ÙØ³ØªØ±ÙÙ Ø§ÙÙÙÙ! Ø¨Ø§ÙÙ ÙÙØª Ø¹ÙÙ ÙÙØ§ÙØ© Ø§ÙÙÙÙ ð¥'),max_length=500)
  async def on_submit(self,interaction):
   setcfg('dm_start',self.start.value); setcfg('dm_photo',self.photo.value); setcfg('dm_reminder',self.reminder_text.value)
-  await interaction.response.send_message('تم حفظ رسائل الخاص ✅',ephemeral=True)
-class DividerModal(discord.ui.Modal,title='صورة الفاصل'):
- url=discord.ui.TextInput(label='رابط الصورة (URL)',placeholder='https://...',required=False,max_length=1000)
- async def on_submit(self,interaction): setcfg('divider_url',self.url.value.strip()); await interaction.response.send_message('تم حفظ رابط الفاصل. اتركه فارغًا لإلغاء الصورة.',ephemeral=True)
-class ReminderModal(discord.ui.Modal,title='إعداد التذكير'):
- hour=discord.ui.TextInput(label='ساعة التذكير بتوقيت الكويت (0-23)',default=cfg('reminder_hour','19'),max_length=2)
+  await interaction.response.send_message('ØªÙ Ø­ÙØ¸ Ø±Ø³Ø§Ø¦Ù Ø§ÙØ®Ø§Øµ â',ephemeral=True)
+class DividerModal(discord.ui.Modal,title='ØµÙØ±Ø© Ø§ÙÙØ§ØµÙ'):
+ url=discord.ui.TextInput(label='Ø±Ø§Ø¨Ø· Ø§ÙØµÙØ±Ø© (URL)',placeholder='https://...',required=False,max_length=1000)
+ async def on_submit(self,interaction): setcfg('divider_url',self.url.value.strip()); await interaction.response.send_message('ØªÙ Ø­ÙØ¸ Ø±Ø§Ø¨Ø· Ø§ÙÙØ§ØµÙ. Ø§ØªØ±ÙÙ ÙØ§Ø±ØºÙØ§ ÙØ¥ÙØºØ§Ø¡ Ø§ÙØµÙØ±Ø©.',ephemeral=True)
+class ReminderModal(discord.ui.Modal,title='Ø¥Ø¹Ø¯Ø§Ø¯ Ø§ÙØªØ°ÙÙØ±'):
+ hour=discord.ui.TextInput(label='Ø³Ø§Ø¹Ø© Ø§ÙØªØ°ÙÙØ± Ø¨ØªÙÙÙØª Ø§ÙÙÙÙØª (0-23)',default=cfg('reminder_hour','19'),max_length=2)
  async def on_submit(self,interaction):
   try:
    h=int(self.hour.value)
    if not 0<=h<=23: raise ValueError
-   setcfg('reminder_hour',h); await interaction.response.send_message(f'تم ضبط التذكير على الساعة {h:02}:00 بتوقيت الكويت ✅',ephemeral=True)
-  except ValueError: await interaction.response.send_message('أدخل ساعة صحيحة من 0 إلى 23.',ephemeral=True)
-class ToggleModal(discord.ui.Modal,title='تفعيل/تعطيل'):
- dm=discord.ui.TextInput(label='الخاص بعد الصور (on/off)',default=cfg('feature_dm','on'),max_length=3)
- reminder=discord.ui.TextInput(label='التذكيرات (on/off)',default=cfg('feature_reminder','on'),max_length=3)
- reactions=discord.ui.TextInput(label='التفاعلات (on/off)',default=cfg('feature_reactions','on'),max_length=3)
+   setcfg('reminder_hour',h); await interaction.response.send_message(f'ØªÙ Ø¶Ø¨Ø· Ø§ÙØªØ°ÙÙØ± Ø¹ÙÙ Ø§ÙØ³Ø§Ø¹Ø© {h:02}:00 Ø¨ØªÙÙÙØª Ø§ÙÙÙÙØª â',ephemeral=True)
+  except ValueError: await interaction.response.send_message('Ø£Ø¯Ø®Ù Ø³Ø§Ø¹Ø© ØµØ­ÙØ­Ø© ÙÙ 0 Ø¥ÙÙ 23.',ephemeral=True)
+class ToggleModal(discord.ui.Modal,title='ØªÙØ¹ÙÙ/ØªØ¹Ø·ÙÙ'):
+ dm=discord.ui.TextInput(label='Ø§ÙØ®Ø§Øµ Ø¨Ø¹Ø¯ Ø§ÙØµÙØ± (on/off)',default=cfg('feature_dm','on'),max_length=3)
+ reminder=discord.ui.TextInput(label='Ø§ÙØªØ°ÙÙØ±Ø§Øª (on/off)',default=cfg('feature_reminder','on'),max_length=3)
+ reactions=discord.ui.TextInput(label='Ø§ÙØªÙØ§Ø¹ÙØ§Øª (on/off)',default=cfg('feature_reactions','on'),max_length=3)
  async def on_submit(self,interaction):
   for k,v in [('feature_dm',self.dm.value),('feature_reminder',self.reminder.value),('feature_reactions',self.reactions.value)]: setcfg(k,'1' if v.lower() in ('on','1','yes') else '0')
-  await interaction.response.send_message('تم تحديث تشغيل الميزات. استخدم on أو off.',ephemeral=True)
-class BroadcastModal(discord.ui.Modal,title='إرسال إعلان'):
- message=discord.ui.TextInput(label='نص الإعلان (يرسل لأعضاء الستريك)',style=discord.TextStyle.paragraph,max_length=1800)
+  await interaction.response.send_message('ØªÙ ØªØ­Ø¯ÙØ« ØªØ´ØºÙÙ Ø§ÙÙÙØ²Ø§Øª. Ø§Ø³ØªØ®Ø¯Ù on Ø£Ù off.',ephemeral=True)
+class BroadcastModal(discord.ui.Modal,title='Ø¥Ø±Ø³Ø§Ù Ø¥Ø¹ÙØ§Ù'):
+ message=discord.ui.TextInput(label='ÙØµ Ø§ÙØ¥Ø¹ÙØ§Ù (ÙØ±Ø³Ù ÙØ£Ø¹Ø¶Ø§Ø¡ Ø§ÙØ³ØªØ±ÙÙ)',style=discord.TextStyle.paragraph,max_length=1800)
  async def on_submit(self,interaction):
-  await interaction.response.send_message('بدأ إرسال الإعلان إلى المشاركين بالستريك…',ephemeral=True)
+  await interaction.response.send_message('Ø¨Ø¯Ø£ Ø¥Ø±Ø³Ø§Ù Ø§ÙØ¥Ø¹ÙØ§Ù Ø¥ÙÙ Ø§ÙÙØ´Ø§Ø±ÙÙÙ Ø¨Ø§ÙØ³ØªØ±ÙÙâ¦',ephemeral=True)
   count=0
   for row in DB.execute('SELECT user_id FROM users').fetchall():
    try: await (await bot.fetch_user(row['user_id'])).send(self.message.value); count+=1
    except discord.HTTPException: pass
-  try: await interaction.followup.send(f'تم إرسال الإعلان إلى {count} عضو.',ephemeral=True)
+  try: await interaction.followup.send(f'ØªÙ Ø¥Ø±Ø³Ø§Ù Ø§ÙØ¥Ø¹ÙØ§Ù Ø¥ÙÙ {count} Ø¹Ø¶Ù.',ephemeral=True)
   except discord.HTTPException: pass
 
-@bot.command(name='ستريكي')
+@bot.command(name='Ø³ØªØ±ÙÙÙ')
 async def streak(ctx):
  r=userrow(ctx.author.id)
- if not r: return await ctx.reply('ما عندك ستريك مسجل للحين 📸')
+ if not r: return await ctx.reply('ÙØ§ Ø¹ÙØ¯Ù Ø³ØªØ±ÙÙ ÙØ³Ø¬Ù ÙÙØ­ÙÙ ð¸')
  current=active(r); photos=r['photos'] if current else 0
- embed=discord.Embed(title=f'📊 ستريك {ctx.author.display_name}',color=discord.Color.orange())
+ embed=discord.Embed(title=f'ð Ø³ØªØ±ÙÙ {ctx.author.display_name}',color=discord.Color.orange())
  embed.set_thumbnail(url=ctx.author.display_avatar.url)
- embed.add_field(name='🔥 الحالي',value=f'{current} يوم',inline=True)
- embed.add_field(name='🏆 الأطول',value=f'{r["longest_streak"]} يوم',inline=True)
- embed.add_field(name='📸 صور الحالي',value=str(photos),inline=True)
+ embed.add_field(name='ð¥ Ø§ÙØ­Ø§ÙÙ',value=f'{current} ÙÙÙ',inline=True)
+ embed.add_field(name='ð Ø§ÙØ£Ø·ÙÙ',value=f'{r["longest_streak"]} ÙÙÙ',inline=True)
+ embed.add_field(name='ð¸ ØµÙØ± Ø§ÙØ­Ø§ÙÙ',value=str(photos),inline=True)
  await ctx.reply(embed=embed)
 
 async def leaderboard(ctx,period='all',metric='streak'):
- if period=='all': rows=DB.execute('SELECT user_id,longest_streak AS val FROM users ORDER BY val DESC LIMIT 10').fetchall(); title='🏆 أطول ستريكات'
+ if period=='all': rows=DB.execute('SELECT user_id,longest_streak AS val FROM users ORDER BY val DESC LIMIT 10').fetchall(); title='ð Ø£Ø·ÙÙ Ø³ØªØ±ÙÙØ§Øª'
  else:
   days=7 if period=='week' else 30; since=(today()-timedelta(days=days-1)).isoformat()
-  rows=DB.execute('SELECT user_id,SUM(photos) AS val FROM activity WHERE day>=? GROUP BY user_id ORDER BY val DESC LIMIT 10',(since,)).fetchall(); title='📸 أكثر صور آخر '+('7 أيام' if period=='week' else '30 يوم')
- if not rows: return await ctx.reply('ما فيه بيانات كافية للحين.')
+  rows=DB.execute('SELECT user_id,SUM(photos) AS val FROM activity WHERE day>=? GROUP BY user_id ORDER BY val DESC LIMIT 10',(since,)).fetchall(); title='ð¸ Ø£ÙØ«Ø± ØµÙØ± Ø¢Ø®Ø± '+('7 Ø£ÙØ§Ù' if period=='week' else '30 ÙÙÙ')
+ if not rows: return await ctx.reply('ÙØ§ ÙÙÙ Ø¨ÙØ§ÙØ§Øª ÙØ§ÙÙØ© ÙÙØ­ÙÙ.')
  lines=[]
-  for i,r in enumerate(rows,1):
-        try: m=await ctx.guild.fetch_member(r['user_id']); name=m.display_name
-  except: name=f'عضو {r["user_id"]}'
-  unit='يوم' if period=='all' else 'صورة'
-  lines.append(f'**{i}.** {name} — **{r["val"]} {unit}**')
+ for i,r in enumerate(rows,1):
+  try: m=await ctx.guild.fetch_member(r['user_id']); name=m.display_name
+  except: name=f'Ø¹Ø¶Ù {r["user_id"]}'
+  unit='ÙÙÙ' if period=='all' else 'ØµÙØ±Ø©'
+  lines.append(f'**{i}.** {name} â **{r["val"]} {unit}**')
  await ctx.reply(title+'\n'+'\n'.join(lines))
-@bot.command(name='توب_ستريك')
+@bot.command(name='ØªÙØ¨_Ø³ØªØ±ÙÙ')
 async def top_streak(ctx): await leaderboard(ctx,'all')
 @bot.command(name='tops')
 async def tops(ctx): await leaderboard(ctx,'all')
-@bot.command(name='توب_صور')
+@bot.command(name='ØªÙØ¨_ØµÙØ±')
 async def top_photos(ctx): await leaderboard(ctx,'month')
-@bot.command(name='توب_أسبوع')
+@bot.command(name='ØªÙØ¨_Ø£Ø³Ø¨ÙØ¹')
 async def top_week(ctx): await leaderboard(ctx,'week')
 
 @bot.event
@@ -187,16 +187,16 @@ async def on_message(message):
     url=cfg('divider_url','')
     if url:
      try: await message.channel.send(embed=discord.Embed().set_image(url=url))
-     except: await message.channel.send('━━━━━━━━ 🔥 بداية ستريك جديد 🔥 ━━━━━━━━')
-    else: await message.channel.send('━━━━━━━━ 🔥 بداية ستريك جديد 🔥 ━━━━━━━━')
+     except: await message.channel.send('ââââââââ ð¥ Ø¨Ø¯Ø§ÙØ© Ø³ØªØ±ÙÙ Ø¬Ø¯ÙØ¯ ð¥ ââââââââ')
+    else: await message.channel.send('ââââââââ ð¥ Ø¨Ø¯Ø§ÙØ© Ø³ØªØ±ÙÙ Ø¬Ø¯ÙØ¯ ð¥ ââââââââ')
     if enabled('feature_dm'):
-     await dm_text(message.author,cfg('dm_start','بديت ستريك يا وحش استمر 🔥'))
+     await dm_text(message.author,cfg('dm_start','Ø¨Ø¯ÙØª Ø³ØªØ±ÙÙ ÙØ§ ÙØ­Ø´ Ø§Ø³ØªÙØ± ð¥'))
    if enabled('feature_reactions'):
     for e in reactions()[:3]:
      try: await message.add_reaction(e)
      except discord.HTTPException: pass
    if enabled('feature_dm'):
-    msg=cfg('dm_photo','تم تسجيل صورتك! ستريكك الحالي: {streak} يوم 🔥').replace('{streak}',str(streak)).replace('{photos}',str(total))
+    msg=cfg('dm_photo','ØªÙ ØªØ³Ø¬ÙÙ ØµÙØ±ØªÙ! Ø³ØªØ±ÙÙÙ Ø§ÙØ­Ø§ÙÙ: {streak} ÙÙÙ ð¥').replace('{streak}',str(streak)).replace('{photos}',str(total))
     await dm_text(message.author,msg)
  await bot.process_commands(message)
 
@@ -210,7 +210,7 @@ async def reminder():
  for r in rows:
   if r['reminder_day']==day: continue
   try:
-   u=await bot.fetch_user(r['user_id']); await dm_text(u,cfg('dm_reminder','⏰ لا تنسى الستريك اليوم! باقي وقت على نهاية اليوم 🔥'))
+   u=await bot.fetch_user(r['user_id']); await dm_text(u,cfg('dm_reminder','â° ÙØ§ ØªÙØ³Ù Ø§ÙØ³ØªØ±ÙÙ Ø§ÙÙÙÙ! Ø¨Ø§ÙÙ ÙÙØª Ø¹ÙÙ ÙÙØ§ÙØ© Ø§ÙÙÙÙ ð¥'))
   except discord.HTTPException: pass
   DB.execute('UPDATE users SET reminder_day=? WHERE user_id=?',(day,r['user_id']))
  DB.commit()
@@ -218,4 +218,4 @@ async def reminder():
 async def wait_ready(): await bot.wait_until_ready()
 
 if not TOKEN: raise RuntimeError('Missing DISCORD_TOKEN environment variable')
-bot.run(TOKEN) 
+bot.run(TOKEN)
