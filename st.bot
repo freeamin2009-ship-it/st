@@ -1,0 +1,156 @@
+
+import os
+import sqlite3
+from datetime import datetime, date, timedelta
+from zoneinfo import ZoneInfo
+
+import discord
+from discord.ext import commands, tasks
+
+TZ = ZoneInfo("Asia/Kuwait")
+TOKEN = os.getenv("DISCORD_TOKEN")
+CHANNEL_ID = int(os.getenv("STREAK_CHANNEL_ID", "0"))
+REACTIONS = os.getenv("REACTIONS", "🔥,❤️").split(",")
+SEPARATOR = os.getenv("SEPARATOR", "━━━━━━━━ 🔥 STREAK 🔥 ━━━━━━━━")
+
+db = sqlite3.connect("streaks.db")
+db.row_factory = sqlite3.Row
+
+db.execute("""
+CREATE TABLE IF NOT EXISTS users (
+    user_id INTEGER PRIMARY KEY,
+    current_streak INTEGER DEFAULT 0,
+    longest_streak INTEGER DEFAULT 0,
+    photos INTEGER DEFAULT 0,
+    last_day TEXT,
+    reminder_day TEXT
+)
+""")
+db.commit()
+
+intents = discord.Intents.default()
+intents.message_content = True
+bot = commands.Bot(command_prefix="-", intents=intents)
+
+def today():
+    return datetime.now(TZ).date()
+
+def get_user(uid):
+    return db.execute("SELECT * FROM users WHERE user_id=?", (uid,)).fetchone()
+
+def is_image(a):
+    return (a.content_type or "").startswith("image/") or a.filename.lower().endswith(
+        (".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp")
+    )
+
+def active_streak(row):
+    if not row or not row["last_day"]:
+        return 0
+    last = date.fromisoformat(row["last_day"])
+    if last >= today() - timedelta(days=1):
+        return row["current_streak"]
+    return 0
+
+def record_photos(uid, count):
+    day = today()
+    daystr = day.isoformat()
+    row = get_user(uid)
+
+    if not row:
+        streak, photos = 1, count
+        db.execute("INSERT INTO users(user_id) VALUES(?)", (uid,))
+        row = get_user(uid)
+        new_streak = True
+    else:
+        last = date.fromisoformat(row["last_day"]) if row["last_day"] else None
+        if last == day:
+            streak, photos = row["current_streak"], row["photos"] + count
+            new_streak = False
+        elif last == day - timedelta(days=1):
+            streak, photos = row["current_streak"] + 1, row["photos"] + count
+            new_streak = False
+        else:
+            streak, photos = 1, count
+            new_streak = True
+
+    longest = max(row["longest_streak"], streak)
+    db.execute("""
+        UPDATE users SET current_streak=?, longest_streak=?, photos=?, last_day=?
+        WHERE user_id=?
+    """, (streak, longest, photos, daystr, uid))
+    db.commit()
+    return streak, longest, photos, new_streak
+
+@bot.event
+async def on_ready():
+    print(f"Bot online: {bot.user}")
+    reminder.start()
+
+@bot.event
+async def on_message(message):
+    if message.author.bot:
+        return
+
+    if message.content.strip() == "-ستريكي":
+        row = get_user(message.author.id)
+        if not row:
+            await message.reply("ما عندك ستريك مسجل للحين 📸")
+            return
+        current = active_streak(row)
+        photos = row["photos"] if current else 0
+        await message.reply(
+            f"📊 **ستريكك**\n"
+            f"🔥 الحالي: **{current} يوم**\n"
+            f"🏆 الأطول: **{row['longest_streak']} يوم**\n"
+            f"📸 صور الستريك الحالي: **{photos}**"
+        )
+        return
+
+    if message.channel.id == CHANNEL_ID:
+        images = [a for a in message.attachments if is_image(a)]
+        if images:
+            streak, longest, photos, new = record_photos(message.author.id, len(images))
+            if new:
+                await message.channel.send(SEPARATOR)
+            for emoji in REACTIONS[:3]:
+                try:
+                    await message.add_reaction(emoji.strip())
+                except discord.HTTPException:
+                    pass
+
+    await bot.process_commands(message)
+
+@tasks.loop(minutes=1)
+async def reminder():
+    now = datetime.now(TZ)
+    if now.hour < 19:
+        return
+
+    daystr = now.date().isoformat()
+    yesterday = (now.date() - timedelta(days=1)).isoformat()
+    rows = db.execute("SELECT * FROM users WHERE last_day=?", (yesterday,)).fetchall()
+
+    for row in rows:
+        if row["reminder_day"] == daystr:
+            continue
+        try:
+            user = await bot.fetch_user(row["user_id"])
+            await user.send(
+                "⏰ تذكير الستريك!\n"
+                "باقي 5 ساعات تقريبًا على نهاية اليوم، "
+                "نزّل صورتك بروم الستريك عشان ما ينقطع 🔥"
+            )
+        except discord.HTTPException:
+            pass
+        db.execute("UPDATE users SET reminder_day=? WHERE user_id=?",
+                  (daystr, row["user_id"]))
+    db.commit()
+
+@reminder.before_loop
+async def before_reminder():
+    await bot.wait_until_ready()
+
+if not TOKEN:
+    raise RuntimeError("Missing DISCORD_TOKEN environment variable")
+
+bot.run(TOKEN)
